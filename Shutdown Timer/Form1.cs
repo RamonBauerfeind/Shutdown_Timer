@@ -7,7 +7,7 @@ namespace Shutdown_Timer
 {
     public partial class Form1 : Form
     {
-        //Zeit bis Alarm abläuft
+        //Zeitspanne bis Alarm abläuft
         TimeSpan timeLeft;
 
         // Konstruktor
@@ -16,19 +16,16 @@ namespace Shutdown_Timer
             InitializeComponent();
         }
 
-        private void lblTimer_Click(object sender, EventArgs e)
-        {
-
-        }
-
+        // Button Start
         private void btnStart_Click(object sender, EventArgs e)
         {
             CheckTextBoxValues();
+            // prüft ob timer gestartet werden kann
             bool isStarteble = true;
 
             try
             {
-                // Können Werte aus Textboxen in Int konvertiert werden?
+                // prüft ob Werte aus Textboxen in Int konvertiert werden können
                 timeLeft = new TimeSpan(Convert.ToInt32(txtHours.Text), Convert.ToInt32(txtMinutes.Text), Convert.ToInt32(txtSeconds.Text));
             }
             catch(FormatException ex)
@@ -40,12 +37,12 @@ namespace Shutdown_Timer
             if(isStarteble == true)
             {
                 timer.Start();
-                // Werte in String konvertieren und in Label Timer übernehmen
+                // Werte aus timeLeft in String konvertieren und in Label Timer übernehmen
                 lblTimer.Text = timeLeft.ToString(@"hh\:mm\:ss");
             }
         }
 
-        // wenn nichts eingegeben wird == 0
+        // wenn nichts in Textboxen eingegeben wird == 0
         private void CheckTextBoxValues()
         {
             if(txtHours.Text.Count() == 0)
@@ -67,18 +64,20 @@ namespace Shutdown_Timer
         // Eventhandler für Timer
         private void timer_Tick(object sender, EventArgs e)
         {
-            // jede Sekunde - 1 Sekunden
+            // jede Sekunde wird -1 Sekunde gerechnet
             timeLeft = timeLeft.Subtract(TimeSpan.FromSeconds(1));
+            // Werte aus timeLeft in String konvertieren und in Label Timer übernehmen
             lblTimer.Text = timeLeft.ToString(@"hh\:mm\:ss");
 
             // wenn Testzeit <= 0
-            if(timeLeft.TotalSeconds <= 0)
+            if (timeLeft.TotalSeconds <= 0)
             {
                 timer.Stop();
                 PerformAction();
             }
         }
 
+        // ausgewählte Action ausführen
         private void PerformAction()
         {
             if(rbShutdown.Checked)
@@ -98,6 +97,7 @@ namespace Shutdown_Timer
             }
         }
 
+        // Button Stop
         private void btnStop_Click(object sender, EventArgs e)
         {
             timer.Stop();
